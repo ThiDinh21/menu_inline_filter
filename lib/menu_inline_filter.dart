@@ -3,7 +3,7 @@ library menu_inline_filter;
 import 'package:flutter/material.dart';
 
 import 'provider/menu_inline_filter_provider.dart';
-import 'widgets/menu_app_bar_item.dart';
+import 'widgets/current_selected_menu_item.dart';
 import 'widgets/menu_category_app_bar_item.dart';
 import 'widgets/menu_sub_category_app_bar_item.dart';
 import 'widgets/vertical_divider.dart' as vd;
@@ -132,7 +132,6 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
 
   // change menu filter horizontal offset
   void _changeHorizontalOffset() {
-    // TODO box can be null
     final RenderBox box = _globalKeys[_selectedCategoryIndex]
         .currentContext!
         .findRenderObject() as RenderBox;
@@ -191,7 +190,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     _scrollController.dispose();
   }
 
-  // get subcategory test color based on menu filter state
+  // get subcategory text color based on menu filter state
   Color _getSubCategoryTextColor(String subCategory) {
     return _selectedSubcategory == ''
         ? widget.unselectedCategoryColor
@@ -201,7 +200,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
             : widget.unselectedSubCategoryColor;
   }
 
-  // get category test color based on menu filter state
+  // get category text color based on menu filter state
   Color _getCategoryTextColor(String category) {
     return widget.categories.indexOf(category) == _selectedCategoryIndex
         ? widget.selectedCategoryColor
@@ -296,36 +295,24 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
                 ],
               ),
             ),
-            // CURRENT SELECTED MENU ITEM
-            Positioned(
-              left: 0,
-              child: _isCurrentItemShown
-                  ? Container(
-                      color: widget.backgroundColor,
-                      child: Row(
-                        children: [
-                          MenuAppBarItem(
-                            onTapDown: (details) {
-                              _scrollController
-                                  .animateTo(0.0,
-                                      duration: Duration(
-                                          milliseconds:
-                                              widget.animationDuration),
-                                      curve: Curves.linear)
-                                  .then((value) => _resetOffset());
-                              // remove selection from subcategory when menu filter closed
-                              setState(() {
-                                _selectedSubcategory = '';
-                              });
-                            },
-                            title: widget.categories[_selectedCategoryIndex],
-                            textColor: widget.selectedCategoryColor,
-                          ),
-                          const vd.VerticalDivider(),
-                        ],
-                      ),
-                    )
-                  : const SizedBox(),
+            CurrentSelectedMenuItem(
+              backgroundColor: widget.backgroundColor,
+              isCurrentItemShown: _isCurrentItemShown,
+              categories: widget.categories,
+              selectedCategoryColor: widget.selectedCategoryColor,
+              selectedCategoryIndex: _selectedCategoryIndex,
+              onTapFunction: (details) {
+                _scrollController
+                    .animateTo(0.0,
+                        duration:
+                            Duration(milliseconds: widget.animationDuration),
+                        curve: Curves.linear)
+                    .then((value) => _resetOffset());
+                // remove selection from subcategory when menu filter closed
+                setState(() {
+                  _selectedSubcategory = '';
+                });
+              },
             ),
           ],
         ),
