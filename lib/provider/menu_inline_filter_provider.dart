@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MenuInlineFilterProvider extends InheritedWidget {
+  final double height;
+  final double fontSize;
+  final String fontFamily;
+
   const MenuInlineFilterProvider({
     Key? key,
     required this.height,
@@ -8,10 +12,6 @@ class MenuInlineFilterProvider extends InheritedWidget {
     required this.fontFamily,
     required Widget child,
   }) : super(key: key, child: child);
-
-  final double height;
-  final double fontSize;
-  final String fontFamily;
 
   static MenuInlineFilterProvider? of(BuildContext context) {
     return context

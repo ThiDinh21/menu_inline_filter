@@ -9,19 +9,19 @@ import 'widgets/menu_sub_category_app_bar_item.dart';
 import 'widgets/vertical_divider.dart' as vd;
 
 class MenuInlineFilter extends StatefulWidget {
-  //callback used when category selected
+  // callback used when category selected
   final Function? updateCategory;
-  //callback used when category subcategory selected
+  // callback used when category subcategory selected
   final Function? updateSubCategory;
-//list of list of subcategories
-  final List<List<String>> subCategories;
-  //list of categories
+  // list of categories
   final List<String> categories;
-  //height of menu filter
+  // list of list of subcategories
+  final List<List<String>> subCategories;
+  // height of menu filter
   final double height;
-  //horizontal padding of menu filter
+  // horizontal padding of menu filter
   final double horizontalPadding;
-  //background color of menu filter
+  // background color of menu filter
   final Color backgroundColor;
   final Color selectedCategoryColor;
   final Color textColor;
@@ -65,30 +65,30 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
   late AnimationController _controller;
   // animation
   late Animation<double> _animation;
-  //menu items global keys
-  late List<GlobalKey> _globalkeys;
-  //MenuCategoryAppBarItemExpandable global keu
-  final GlobalKey _menuFilterKey = GlobalKey();
+  // menu items global keys
+  late List<GlobalKey> _globalKeys;
+  // MenuCategoryAppBarItemExpandable global key
+  final _menuFilterKey = GlobalKey();
   // TODO divide by 0 later on
-  //size of MenuCategoryAppBarItemExpandable widget
+  // size of MenuCategoryAppBarItemExpandable widget
   double _filterSizeWidth = 0;
-  //size of individual menu item
+  // size of individual menu item
   double _menuItemSize = 0;
   // check if any item from menu filter is selected
   bool _isCurrentItemShown = false;
   // scroll controller
   final _scrollController = ScrollController();
-  //current category index
+  // current category index
   int _selectedCategoryIndex = 0;
-  //current subcategory index
+  // current subcategory index
   int _selectedSubCategoryIndex = 0;
-  //current selected subcategory
+  // current selected subcategory
   String _selectedSubcategory = '';
 
   @override
   void initState() {
     super.initState();
-    _globalkeys = widget.categories
+    _globalKeys = widget.categories
         .map((value) => GlobalKey(debugLabel: value.toString()))
         .toList();
     WidgetsBinding.instance!.addPostFrameCallback(_getMenuFilterSize);
@@ -100,28 +100,28 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
         Tween(begin: 1.0, end: 1 / _horizontalOffset).animate(_controller);
   }
 
-  //change category index
+  // change category index
   void _changeSelectedCategoryIndex(int value) {
     setState(() {
       _selectedCategoryIndex = value;
     });
   }
 
-  //change subcategory index
+  // change subcategory index
   void _changeSelectedSubCategoryIndex(int value) {
     setState(() {
       _selectedSubCategoryIndex = value;
     });
   }
 
-  //change subcategory
+  // change subcategory
   void _changeSelectedSubCategory(String value) {
     setState(() {
       _selectedSubcategory = value;
     });
   }
 
-  //get total width of expandable menu filter
+  // get total width of expandable menu filter
   void _getMenuFilterSize(Duration duration) {
     final RenderBox? box =
         _menuFilterKey.currentContext!.findRenderObject() as RenderBox?;
@@ -130,10 +130,10 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     });
   }
 
-  //change menu filter horizontal offset
+  // change menu filter horizontal offset
   void _changeHorizontalOffset() {
     // TODO box can be null
-    final RenderBox box = _globalkeys[_selectedCategoryIndex]
+    final RenderBox box = _globalKeys[_selectedCategoryIndex]
         .currentContext!
         .findRenderObject() as RenderBox;
     final position = box.localToGlobal(Offset.zero);
@@ -144,22 +144,22 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
           _scrollController.position.pixels;
     });
 
-    //scroll menu filter to beginning of scroll
+    // scroll menu filter to beginning of scroll
     _scrollController.animateTo(0.0,
         duration: Duration(milliseconds: widget.animationDuration),
         curve: Curves.linear);
 
     _controller.forward().then((value) => {
-          //show static current menu item
+          // show static current menu item
           setState(() {
             _isCurrentItemShown = true;
           })
         });
   }
 
-  //get size of individual menu Item
+  // get size of individual menu Item
   void _getItemSize(String category) {
-    final RenderBox? box = _globalkeys[_selectedCategoryIndex]
+    final RenderBox? box = _globalKeys[_selectedCategoryIndex]
         .currentContext!
         .findRenderObject() as RenderBox?;
 
@@ -170,9 +170,9 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     });
   }
 
-  //reset menu filter to original position
+  // reset menu filter to original position
   void _resetOffset() {
-    //make current item invisible
+    // make current item invisible
     setState(() {
       _isCurrentItemShown = false;
     });
@@ -186,22 +186,22 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
 
   @override
   void dispose() {
+    super.dispose();
     _controller.dispose();
     _scrollController.dispose();
-    super.dispose();
   }
 
-  //get subcategory test color based on menu filter state
-  Color _getSubCategoryTextColor(String subcategory) {
+  // get subcategory test color based on menu filter state
+  Color _getSubCategoryTextColor(String subCategory) {
     return _selectedSubcategory == ''
         ? widget.unselectedCategoryColor
-        : widget.subCategories[_selectedCategoryIndex].indexOf(subcategory) ==
+        : widget.subCategories[_selectedCategoryIndex].indexOf(subCategory) ==
                 _selectedSubCategoryIndex
             ? widget.selectedSubCategoryColor
             : widget.unselectedSubCategoryColor;
   }
 
-  //get category test color based on menu filter state
+  // get category test color based on menu filter state
   Color _getCategoryTextColor(String category) {
     return widget.categories.indexOf(category) == _selectedCategoryIndex
         ? widget.selectedCategoryColor
@@ -251,7 +251,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
                                               .indexOf(category),
                                           changeSelectedCategoryIndex:
                                               _changeSelectedCategoryIndex,
-                                          key: _globalkeys[widget.categories
+                                          key: _globalKeys[widget.categories
                                               .indexOf(category)],
                                           getItemSize: _getItemSize,
                                           selectedCategory: widget.categories[
@@ -274,7 +274,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
                     ),
                   ),
                   const vd.VerticalDivider(),
-                  //SUBCATEGORIES
+                  // SUBCATEGORIES
                   Row(
                     children: widget.subCategories[_selectedCategoryIndex]
                         .map(
@@ -313,7 +313,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
                                               widget.animationDuration),
                                       curve: Curves.linear)
                                   .then((value) => _resetOffset());
-                              //remove selection from subcategory when menu filter closed
+                              // remove selection from subcategory when menu filter closed
                               setState(() {
                                 _selectedSubcategory = '';
                               });
