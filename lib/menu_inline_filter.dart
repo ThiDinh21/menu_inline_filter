@@ -8,7 +8,7 @@ class MenuInlineFilter extends StatefulWidget {
   //callback used when category subcategory selected
   final Function? updateSubCategory;
 //list of list of subcategories
-  final List<List<String>> subcategories;
+  final List<List<String>> subCategories;
   //list of categories
   final List<String> categories;
   //height of menu filter
@@ -17,27 +17,19 @@ class MenuInlineFilter extends StatefulWidget {
   final double horizontalPadding;
   //background color of menu filter
   final Color backgroundColor;
-  //selectedCategory color
   final Color selectedCategoryColor;
-  //text color
   final Color textColor;
-  //selected subcategory color
   final Color selectedSubCategoryColor;
-  //unselected category color
   final Color unselectedCategoryColor;
-  //unselected subcategory color
   final Color unselectedSubCategoryColor;
-//font size
   final double fontSize;
-  //font family
   final String fontFamily;
-
   final int animationDuration;
 
   const MenuInlineFilter({
     Key? key,
     this.updateCategory,
-    required this.subcategories,
+    required this.subCategories,
     required this.categories,
     this.updateSubCategory,
     this.height = 50,
@@ -51,10 +43,8 @@ class MenuInlineFilter extends StatefulWidget {
     this.unselectedSubCategoryColor = Colors.grey,
     this.fontFamily = 'roboto',
     this.animationDuration = 800,
-  })  : assert(subcategories != null),
-        assert(categories != null),
-        assert(subcategories is List<List<String>>),
-        assert(categories.length == subcategories.length),
+  })  : assert(subCategories is List<List<String>>),
+        assert(categories.length == subCategories.length),
         super(key: key);
 
   @override
@@ -63,7 +53,7 @@ class MenuInlineFilter extends StatefulWidget {
 
 class _MenuInlineFilterState extends State<MenuInlineFilter>
     with TickerProviderStateMixin {
-// horizontal offset of menu filter
+  // horizontal offset of menu filter
   double? _horizontalOffset;
   // animation controller
   late AnimationController _controller;
@@ -203,7 +193,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
   Color _getSubCategoryTextColor(String subcategory) {
     return _selectedSubcategory == ''
         ? widget.unselectedCategoryColor
-        : widget.subcategories[_selectedCategoryIndex!].indexOf(subcategory) ==
+        : widget.subCategories[_selectedCategoryIndex!].indexOf(subcategory) ==
                 _selectedSubCategoryIndex
             ? widget.selectedSubCategoryColor
             : widget.unselectedSubCategoryColor;
@@ -285,11 +275,11 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
                     const VerticalDivider(),
                     //SUBCATEGORIES
                     Row(
-                      children: widget.subcategories[_selectedCategoryIndex!]
+                      children: widget.subCategories[_selectedCategoryIndex!]
                           .map(
                             (subcategory) => MenuSubCategoryAppBarItem(
                                 index: widget
-                                    .subcategories[_selectedCategoryIndex!]
+                                    .subCategories[_selectedCategoryIndex!]
                                     .indexOf(subcategory),
                                 title: subcategory,
                                 textColor:
