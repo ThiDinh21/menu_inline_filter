@@ -301,7 +301,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
               left: 0,
               child: _isCurrentItemShown
                   ? Container(
-                      color: Colors.white,
+                      color: widget.backgroundColor,
                       child: Row(
                         children: [
                           MenuAppBarItem(
