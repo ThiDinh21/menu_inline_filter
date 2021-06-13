@@ -2,11 +2,11 @@ library menu_inline_filter;
 
 import 'package:flutter/material.dart';
 
-import 'src/current_selected_menu_item.dart';
-import 'src/menu_category_app_bar_item.dart';
-import 'src/menu_sub_category_app_bar_item.dart';
-import 'src/provider/menu_inline_filter_provider.dart';
-import 'src/vertical_divider.dart' as vd;
+import 'provider/menu_inline_filter_provider.dart';
+import 'widgets/current_selected_menu_item.dart';
+import 'widgets/menu_category_app_bar_item.dart';
+import 'widgets/menu_sub_category_app_bar_item.dart';
+import 'widgets/vertical_divider.dart' as vd;
 
 class MenuInlineFilter extends StatefulWidget {
   // callback used when category selected

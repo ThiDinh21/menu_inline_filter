@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'provider/menu_inline_filter_provider.dart';
+import '../provider/menu_inline_filter_provider.dart';
 
 class MenuAppBarItem extends StatelessWidget {
   final String title;
