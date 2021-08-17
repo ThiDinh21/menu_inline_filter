@@ -4,7 +4,6 @@ import 'menu_app_bar_item.dart';
 
 class MenuCategoryAppBarItem extends StatefulWidget {
   final String title;
-
   final int index;
   final String? menuItemCategory;
   final Function? updateCategory;
@@ -36,6 +35,7 @@ class MenuCategoryAppBarItem extends StatefulWidget {
 class _MenuCategoryAppBarItemState extends State<MenuCategoryAppBarItem> {
   // detect if menu item state is open or close
   late bool _isOpen;
+
   @override
   void initState() {
     _isOpen = false;
@@ -43,6 +43,7 @@ class _MenuCategoryAppBarItemState extends State<MenuCategoryAppBarItem> {
   }
 
   void _moveMenuFilter(BuildContext context) {
+    // closes category bar when selecting current category
     if (widget.selectedCategory == widget.menuItemCategory && !_isOpen) {
       widget.resetHorizontalOffset!();
     } else {
@@ -53,7 +54,7 @@ class _MenuCategoryAppBarItemState extends State<MenuCategoryAppBarItem> {
   @override
   Widget build(BuildContext context) {
     return MenuAppBarItem(
-      onTapDown: (details) {
+      onTap: () {
         setState(() {
           _isOpen = !_isOpen;
         });
@@ -61,7 +62,6 @@ class _MenuCategoryAppBarItemState extends State<MenuCategoryAppBarItem> {
         if (widget.updateCategory != null) {
           widget.updateCategory!(widget.menuItemCategory);
         }
-
         //change selected category index
         widget.changeSelectedCategoryIndex!(widget.index);
         //move menu filter based on menu item selection

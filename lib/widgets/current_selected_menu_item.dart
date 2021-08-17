@@ -7,9 +7,9 @@ class CurrentSelectedMenuItem extends StatelessWidget {
   final List<String> categories;
   final Color selectedCategoryColor;
   final int selectedCategoryIndex;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final bool isCurrentItemShown;
-  final void Function(TapDownDetails) onTapFunction;
+  final void Function() onTapFunction;
 
   const CurrentSelectedMenuItem({
     Key? key,
@@ -31,7 +31,7 @@ class CurrentSelectedMenuItem extends StatelessWidget {
               child: Row(
                 children: [
                   MenuAppBarItem(
-                    onTapDown: onTapFunction,
+                    onTap: onTapFunction,
                     title: categories[selectedCategoryIndex],
                     textColor: selectedCategoryColor,
                   ),

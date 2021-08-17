@@ -25,7 +25,7 @@ class MenuSubCategoryAppBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MenuAppBarItem(
-      onTapDown: (details) {
+      onTap: () {
         if (updateSubCategory != null) {
           updateSubCategory!(selectedSubCategory);
         }

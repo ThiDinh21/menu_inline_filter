@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+
 import '../provider/menu_inline_filter_provider.dart';
 
 class MenuAppBarItem extends StatelessWidget {
   final String title;
   final Color? textColor;
-  final void Function(TapDownDetails)? onTapDown;
+  final void Function()? onTap;
 
   const MenuAppBarItem({
     Key? key,
     required this.title,
     this.textColor = Colors.grey,
-    this.onTapDown,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -18,7 +19,7 @@ class MenuAppBarItem extends StatelessWidget {
     final _menuInlineFilterProvider = MenuInlineFilterProvider.of(context)!;
 
     return GestureDetector(
-      onTapDown: onTapDown,
+      onTap: onTap,
       child: Container(
         height: _menuInlineFilterProvider.height,
         margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -27,9 +28,11 @@ class MenuAppBarItem extends StatelessWidget {
             title.toUpperCase(),
             overflow: TextOverflow.fade,
             style: TextStyle(
-                color: textColor,
-                fontSize: _menuInlineFilterProvider.fontSize,
-                fontFamily: _menuInlineFilterProvider.fontFamily),
+              color: textColor,
+              fontSize: 12,
+              fontFamily: 'Avenir',
+              letterSpacing: 2,
+            ),
           ),
         ),
       ),

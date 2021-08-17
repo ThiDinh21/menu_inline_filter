@@ -1,5 +1,3 @@
-library menu_inline_filter;
-
 import 'package:flutter/material.dart';
 
 import 'provider/menu_inline_filter_provider.dart';
@@ -16,18 +14,18 @@ class MenuInlineFilter extends StatefulWidget {
   // list of categories
   final List<String> categories;
   // list of list of subcategories
-  final List<List<String>> subCategories;
+  final List<List<String>> subcategories;
   // height of menu filter
   final double height;
   // horizontal padding of menu filter
   final double horizontalPadding;
   // background color of menu filter
   final Color backgroundColor;
-  final Color selectedCategoryColor;
   final Color textColor;
-  final Color selectedSubCategoryColor;
+  final Color selectedCategoryColor;
+  final Color? selectedSubcategoryColor;
   final Color unselectedCategoryColor;
-  final Color unselectedSubCategoryColor;
+  final Color unselectedSubcategoryColor;
   final double fontSize;
   final String fontFamily;
   final int animationDuration;
@@ -35,21 +33,21 @@ class MenuInlineFilter extends StatefulWidget {
   const MenuInlineFilter({
     Key? key,
     this.updateCategory,
-    required this.subCategories,
+    required this.subcategories,
     required this.categories,
     this.updateSubCategory,
     this.height = 50,
     this.horizontalPadding = 15,
-    this.backgroundColor = Colors.white,
+    required this.backgroundColor,
     this.fontSize = 13,
     this.selectedCategoryColor = Colors.red,
     this.textColor = Colors.grey,
-    this.selectedSubCategoryColor = Colors.black,
+    this.selectedSubcategoryColor,
     this.unselectedCategoryColor = Colors.grey,
-    this.unselectedSubCategoryColor = Colors.grey,
+    this.unselectedSubcategoryColor = Colors.grey,
     this.fontFamily = 'roboto',
     this.animationDuration = 800,
-  })  : assert(categories.length == subCategories.length),
+  })  : assert(categories.length == subcategories.length),
         super(key: key);
 
   @override
@@ -72,8 +70,6 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
   double _filterSizeWidth = 0;
   // size of individual menu item
   double _menuItemSize = 0;
-  // check if any item from menu filter is selected
-  bool _isCurrentItemShown = false;
   // scroll controller
   final _scrollController = ScrollController();
   // current category index
@@ -82,6 +78,8 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
   int _selectedSubCategoryIndex = 0;
   // current selected subcategory
   String _selectedSubcategory = '';
+  // check if any item from menu filter is selected
+  bool _isCurrentItemShown = false;
 
   @override
   void initState() {
@@ -96,6 +94,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     );
     _animation =
         Tween(begin: 1.0, end: 1 / _horizontalOffset).animate(_controller);
+    _changeSelectedCategoryIndex(0);
   }
 
   // change category index
@@ -103,6 +102,8 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     setState(() {
       _selectedCategoryIndex = value;
     });
+    _changeSelectedSubCategoryIndex(0);
+    _changeSelectedSubCategory(widget.subcategories[_selectedCategoryIndex][0]);
   }
 
   // change subcategory index
@@ -120,7 +121,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
   }
 
   // get total width of expandable menu filter
-  void _getMenuFilterSize(Duration duration) {
+  void _getMenuFilterSize(Duration _) {
     final RenderBox? box =
         _menuFilterKey.currentContext!.findRenderObject() as RenderBox?;
     setState(() {
@@ -142,19 +143,21 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     });
 
     // scroll menu filter to beginning of scroll
-    _scrollController.animateTo(0.0,
-        duration: Duration(milliseconds: widget.animationDuration),
-        curve: Curves.linear);
+    _scrollController.animateTo(
+      0.0,
+      duration: Duration(milliseconds: widget.animationDuration),
+      curve: Curves.linear,
+    );
 
-    _controller.forward().then((value) => {
-          // show static current menu item
+    _controller.forward().then((_) => {
           setState(() {
+            // show static current menu item
             _isCurrentItemShown = true;
-          })
+          }),
         });
   }
 
-  // get size of individual menu Item
+  // get size of individual menu item
   void _getItemSize(String category) {
     final RenderBox? box = _globalKeys[_selectedCategoryIndex]
         .currentContext!
@@ -169,7 +172,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
 
   // reset menu filter to original position
   void _resetOffset() {
-    // make current item invisible
+    // make current main category invisible when selecting new main cate
     setState(() {
       _isCurrentItemShown = false;
     });
@@ -177,7 +180,6 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
     setState(() {
       _horizontalOffset = 0;
     });
-
     _controller.reverse();
   }
 
@@ -192,10 +194,11 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
   Color _getSubCategoryTextColor(String subCategory) {
     return _selectedSubcategory == ''
         ? widget.unselectedCategoryColor
-        : widget.subCategories[_selectedCategoryIndex].indexOf(subCategory) ==
+        : widget.subcategories[_selectedCategoryIndex].indexOf(subCategory) ==
                 _selectedSubCategoryIndex
-            ? widget.selectedSubCategoryColor
-            : widget.unselectedSubCategoryColor;
+            ? widget.selectedSubcategoryColor ??
+                Theme.of(context).indicatorColor
+            : widget.unselectedSubcategoryColor;
   }
 
   // get category text color based on menu filter state
@@ -214,7 +217,6 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
       child: Container(
         height: widget.height,
         padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-        color: widget.backgroundColor,
         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Stack(
           children: [
@@ -273,11 +275,11 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
                   const vd.VerticalDivider(),
                   // SUBCATEGORIES
                   Row(
-                    children: widget.subCategories[_selectedCategoryIndex]
+                    children: widget.subcategories[_selectedCategoryIndex]
                         .map(
                           (subcategory) => MenuSubCategoryAppBarItem(
                               index: widget
-                                  .subCategories[_selectedCategoryIndex]
+                                  .subcategories[_selectedCategoryIndex]
                                   .indexOf(subcategory),
                               title: subcategory,
                               textColor: _getSubCategoryTextColor(subcategory),
@@ -299,7 +301,7 @@ class _MenuInlineFilterState extends State<MenuInlineFilter>
               categories: widget.categories,
               selectedCategoryColor: widget.selectedCategoryColor,
               selectedCategoryIndex: _selectedCategoryIndex,
-              onTapFunction: (details) {
+              onTapFunction: () {
                 _scrollController
                     .animateTo(0.0,
                         duration:
